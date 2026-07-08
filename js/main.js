@@ -137,7 +137,8 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
     camera.position.z = 7.5 + scrollN * 1.6;
     camera.lookAt(0, -scrollN * 1.2, 0);
 
-    const fade = Math.max(0.25, 1 - scrollN * 0.28);
+    const base = window.innerWidth < 720 ? 0.5 : 1;
+    const fade = Math.max(0.25, base - scrollN * 0.28);
     renderer.domElement.style.opacity = fade;
     renderer.render(scene, camera);
   }
