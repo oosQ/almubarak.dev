@@ -11,279 +11,660 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=dev">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07070c;
+    --bg2:#0d0d16;
+    --bg3:#101019;
+    --ink:#f2f1f7;
+    --muted:#8b8aa3;
+    --muted2:#b8b6cf;
+    --line:rgba(255,255,255,.08);
+    --line2:rgba(255,255,255,.14);
+    --violet:#8b5cf6;
+    --cyan:#22d3ee;
+    --accent:#a78bfa;
+    --green:#34d399;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Space Grotesk',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'JetBrains Mono',monospace}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px clamp(20px,5vw,64px);
+    transition:background .3s,backdrop-filter .3s,border-color .3s;
+    border-bottom:1px solid transparent;
+  }
+  nav.scrolled{background:rgba(7,7,12,.72);backdrop-filter:blur(12px);border-color:var(--line)}
+  nav .logo{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:16px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+  nav .logo .accent{color:var(--accent)}
+  nav .links{display:flex;gap:30px;align-items:center}
+  nav .links a{color:var(--muted2);text-decoration:none;font-size:13px;letter-spacing:.04em;transition:color .2s}
+  nav .links a:hover{color:var(--ink)}
+  nav .links a.cta{padding:9px 18px;border:1px solid var(--line2);border-radius:100px;color:var(--ink)}
+  nav .links a.cta:hover{border-color:var(--accent);background:rgba(139,92,246,.12)}
+  @media(max-width:680px){nav .links a:not(.cta){display:none}}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;min-height:100vh;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:0 clamp(20px,5vw,64px);
+    perspective:1200px;overflow:hidden;
+  }
+  /* ---------- global animated background: dev + security ---------- */
+  .site-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  #net{position:absolute;inset:0;width:100%;height:100%;opacity:.5}
+  .bg-grid{position:absolute;inset:0;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:48px 48px;opacity:.4;
+    mask-image:radial-gradient(ellipse 85% 65% at 50% 28%,#000,transparent 82%);
+    -webkit-mask-image:radial-gradient(ellipse 85% 65% at 50% 28%,#000,transparent 82%);}
+  .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.4;will-change:transform}
+  .orb.v{width:520px;height:520px;background:radial-gradient(circle at 30% 30%,var(--violet),transparent 70%);top:-120px;left:-80px;animation:drift 26s ease-in-out infinite}
+  .orb.c{width:460px;height:460px;background:radial-gradient(circle at 30% 30%,var(--cyan),transparent 70%);bottom:-140px;right:-60px;animation:drift 30s ease-in-out infinite reverse}
+  .orb.g{width:360px;height:360px;background:radial-gradient(circle at 30% 30%,var(--green),transparent 70%);top:46%;left:54%;opacity:.16;animation:drift 34s ease-in-out infinite}
+  @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(6%,8%) scale(1.12)}}
+  .tokens{position:absolute;inset:0;will-change:transform}
+  .tok{position:absolute;font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(167,139,250,.16);white-space:nowrap;animation:tokfloat 16s ease-in-out infinite}
+  .tok .p{color:rgba(34,211,238,.36)}
+  @keyframes tokfloat{0%,100%{transform:translateY(0);opacity:.32}50%{transform:translateY(-26px);opacity:.82}}
+  @media(max-width:680px){.tok{display:none}}
+
+  /* ---------- hero local treatment + themed motifs ---------- */
+  .grid-floor{
+    position:absolute;inset:auto 0 0 0;height:50vh;z-index:0;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:64px 64px;
+    transform:perspective(500px) rotateX(70deg);transform-origin:bottom;
+    mask-image:linear-gradient(to top,#000,transparent 80%);
+    -webkit-mask-image:linear-gradient(to top,#000,transparent 80%);
+    opacity:.45;
+  }
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-22px)}}
+  .motifs{position:absolute;inset:0;z-index:1}
+  .motif{position:absolute;will-change:transform}
+  .m-term{top:17%;right:8%;width:256px;border:1px solid var(--line2);border-radius:12px;background:rgba(13,13,22,.6);backdrop-filter:blur(8px);box-shadow:0 24px 60px rgba(0,0,0,.5);overflow:hidden}
+  .m-term .floaty{animation:float 8s ease-in-out infinite}
+  .m-term .bar{display:flex;gap:6px;padding:10px 12px;border-bottom:1px solid var(--line)}
+  .m-term .bar i{width:10px;height:10px;border-radius:50%;background:#3a3a4a}
+  .m-term .bar i:nth-child(1){background:#ff5f56}.m-term .bar i:nth-child(2){background:#ffbd2e}.m-term .bar i:nth-child(3){background:#27c93f}
+  .m-term pre{margin:0;padding:13px 15px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.8;color:var(--muted2)}
+  .m-term .g{color:var(--green)} .m-term .c{color:var(--cyan)} .m-term .v{color:var(--accent)} .m-term .d{color:var(--muted)}
+  .m-glyph{bottom:22%;left:9%;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:74px;color:rgba(34,211,238,.16);animation:float 7s ease-in-out infinite}
+  .m-lock{top:30%;left:14%;width:96px;height:96px;opacity:.5;animation:float 9s ease-in-out infinite}
+  .m-lock svg{width:100%;height:100%;stroke:var(--accent);fill:none;stroke-width:1}
+  @media(max-width:820px){.motifs{display:none}}
+
+  .hero-content{position:relative;z-index:2;max-width:1100px}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;letter-spacing:.06em;color:var(--muted2);
+    padding:8px 14px;border:1px solid var(--line);border-radius:100px;background:rgba(255,255,255,.02);
+    margin-bottom:28px;opacity:0;transform:translateY(20px);animation:rise .8s .1s forwards;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
+  h1{font-size:clamp(42px,13vw,130px);line-height:.92;font-weight:700;letter-spacing:-.04em;text-wrap:balance}
+  h1 .line{display:block;overflow:hidden}
+  h1 .line span{display:block;transform:translateY(110%);animation:slideUp .9s cubic-bezier(.16,1,.3,1) forwards}
+  h1 .line:nth-child(2) span{animation-delay:.12s}
+  h1 .grad{background:linear-gradient(120deg,var(--violet),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  @keyframes slideUp{to{transform:translateY(0)}}
+  @keyframes rise{to{opacity:1;transform:translateY(0)}}
+  .sub{margin-top:30px;max-width:560px;font-size:clamp(16px,2vw,20px);line-height:1.6;color:var(--muted2);opacity:0;transform:translateY(20px);animation:rise .8s .5s forwards}
+  .cta-row{margin-top:38px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;opacity:0;transform:translateY(20px);animation:rise .8s .65s forwards}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:15px 28px;border-radius:100px;font-size:14px;font-weight:600;text-decoration:none;transition:transform .25s,box-shadow .25s,border-color .25s}
+  .btn.primary{background:linear-gradient(120deg,var(--violet),var(--cyan));color:#06060c}
+  .btn.primary:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(139,92,246,.4)}
+  .btn.ghost{border:1px solid var(--line2);color:var(--ink)}
+  .btn.ghost:hover{border-color:var(--accent);transform:translateY(-3px)}
+  .hero-meta{display:flex;gap:8px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted)}
+
+  .scroll-hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:2;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;animation:rise 1s 1s forwards}
+  .scroll-hint .bar{width:1px;height:38px;background:linear-gradient(var(--accent),transparent);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+  /* ---------- sections ---------- */
+  section.block{padding:clamp(72px,11vh,150px) clamp(20px,5vw,64px);position:relative;max-width:1320px;margin:0 auto}
+  .sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:56px}
+  .sec-num{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent)}
+  .sec-title{font-size:clamp(28px,4vw,46px);font-weight:600;letter-spacing:-.02em}
+  .sec-sub{margin-left:auto;font-size:14px;color:var(--muted);max-width:30ch;text-align:right}
+  @media(max-width:640px){.sec-sub{display:none}}
+
+  /* about */
+  .about-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:56px;align-items:start}
+  @media(max-width:880px){.about-grid{grid-template-columns:1fr;gap:36px}}
+  .about-grid p{font-size:clamp(17px,2.2vw,23px);line-height:1.55;color:var(--muted2);text-wrap:pretty;margin-bottom:20px}
+  .about-grid p .hl{color:var(--ink);font-weight:500}
+  .focus{display:flex;flex-direction:column;gap:14px}
+  .focus-card{display:flex;gap:16px;align-items:flex-start;padding:20px;border:1px solid var(--line);border-radius:14px;background:var(--bg2);transition:border-color .25s,transform .25s}
+  .focus-card:hover{border-color:var(--line2);transform:translateX(4px)}
+  .focus-card .ic{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)}
+  .focus-card .ic svg{width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.8}
+  .focus-card h4{font-size:16px;font-weight:600;margin-bottom:4px}
+  .focus-card p{font-size:14px;line-height:1.5;color:var(--muted);margin:0}
+  .stats{display:flex;gap:44px;margin-top:36px;flex-wrap:wrap}
+  .stat .n{font-size:clamp(30px,4vw,48px);font-weight:700;letter-spacing:-.03em;background:linear-gradient(120deg,var(--violet),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .stat .l{font-size:13px;color:var(--muted);margin-top:4px}
+
+  /* skills */
+  .skill-groups{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  @media(max-width:920px){.skill-groups{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.skill-groups{grid-template-columns:1fr}}
+  .skill-card{border:1px solid var(--line);border-radius:16px;background:var(--bg2);padding:26px;transition:border-color .25s,transform .25s}
+  .skill-card:hover{border-color:var(--line2);transform:translateY(-4px)}
+  .skill-card .kh{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+  .skill-card .kh .ic{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.22)}
+  .skill-card .kh .ic svg{width:18px;height:18px;stroke:var(--cyan);fill:none;stroke-width:1.8}
+  .skill-card .kh h4{font-size:15px;font-weight:600;letter-spacing:.01em}
+  .chips{display:flex;flex-wrap:wrap;gap:9px}
+  .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 13px 8px 9px;border:1px solid var(--line);border-radius:100px;background:rgba(255,255,255,.02);font-size:13px;color:var(--muted2);transition:border-color .2s,color .2s}
+  .chip:hover{border-color:var(--accent);color:var(--ink)}
+  .chip img{width:18px;height:18px;display:block}
+  .chip .badge{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,.16)}
+  .chip .badge svg{width:12px;height:12px;stroke:var(--accent);fill:none;stroke-width:2}
+
+  /* experience + education timeline */
+  .tl{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  @media(max-width:880px){.tl{grid-template-columns:1fr}}
+  .tl-col h3{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:22px;display:flex;align-items:center;gap:10px}
+  .tl-col h3 svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:1.8}
+  .tl-item{position:relative;padding:0 0 26px 30px;border-left:1px solid var(--line)}
+  .tl-item:last-child{padding-bottom:0}
+  .tl-item::before{content:"";position:absolute;left:-6px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--bg);border:2px solid var(--accent)}
+  .tl-card{border:1px solid var(--line);border-radius:14px;background:var(--bg2);padding:22px;transition:border-color .25s,transform .25s}
+  .tl-card:hover{border-color:var(--line2);transform:translateX(4px)}
+  .tl-card .top{display:flex;gap:14px;align-items:flex-start;margin-bottom:12px}
+  .tl-card .logo{flex:none;width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:15px;color:#06060c;background:linear-gradient(135deg,var(--violet),var(--cyan));overflow:hidden}
+  .tl-card .logo.alt{background:linear-gradient(135deg,#22d3ee,#34d399)}
+  .tl-card .logo.img-logo{background:#fff;padding:5px}
+  .tl-card .logo.img-logo img{width:100%;height:100%;object-fit:contain;display:block}
+  .tl-card .logo svg{width:24px;height:24px;stroke:#06060c;fill:none;stroke-width:1.8}
+  .tl-card .role{font-size:17px;font-weight:600;letter-spacing:-.01em}
+  .tl-card .org{font-size:14px;color:var(--accent);margin-top:2px}
+  .tl-card .when{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);margin-top:6px}
+  .tl-card p{font-size:14px;line-height:1.6;color:var(--muted2);margin-top:6px;text-wrap:pretty}
+  .tl-card .tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+  .tl-card .tags span{font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 10px;border:1px solid var(--line);border-radius:6px;color:var(--muted)}
+
+  /* projects */
+  .work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  @media(max-width:1000px){.work-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:640px){.work-grid{grid-template-columns:1fr}}
+  .card{
+    position:relative;border-radius:18px;border:1px solid var(--line);overflow:hidden;
+    background:var(--bg2);min-height:330px;padding:26px;
+    display:flex;flex-direction:column;
+    transition:transform .3s cubic-bezier(.16,1,.3,1),border-color .3s;
+    transform-style:preserve-3d;will-change:transform;text-decoration:none;color:inherit;
+  }
+  .card:hover{border-color:var(--accent)}
+  .card .visual{position:absolute;inset:0;z-index:0;opacity:.85}
+  .card.c1 .visual{background:radial-gradient(circle at 78% 12%,rgba(139,92,246,.45),transparent 55%),linear-gradient(160deg,#16121f,#0b0b13)}
+  .card.c2 .visual{background:radial-gradient(circle at 22% 18%,rgba(34,211,238,.4),transparent 55%),linear-gradient(160deg,#0b1518,#0b0b13)}
+  .card.c3 .visual{background:radial-gradient(circle at 50% 88%,rgba(52,211,153,.34),transparent 55%),linear-gradient(160deg,#0b1813,#0b0b13)}
+  .card.c4 .visual{background:radial-gradient(circle at 82% 78%,rgba(244,114,182,.32),transparent 55%),linear-gradient(160deg,#1a1018,#0b0b13)}
+  .card.c5 .visual{background:radial-gradient(circle at 18% 80%,rgba(245,158,11,.3),transparent 55%),linear-gradient(160deg,#16130b,#0b0b13)}
+  .card.c6 .visual{background:radial-gradient(circle at 60% 15%,rgba(96,165,250,.34),transparent 55%),linear-gradient(160deg,#0b1018,#0b0b13)}
+  .card>*{position:relative;z-index:1}
+  .card .logo{width:54px;height:54px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:20px;letter-spacing:-.03em;color:#fff;transform:translateZ(30px);margin-bottom:30px;flex:none;overflow:hidden}
+  .card .logo.img-logo{background:#fff;padding:7px}
+  .card .logo.img-logo img{width:100%;height:100%;object-fit:contain;display:block}
+  .card .logo.img-cover{padding:0;background:#111827}
+  .card .logo.img-cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .card.c1 .logo{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
+  .card.c2 .logo{background:linear-gradient(135deg,#22d3ee,#0891b2)}
+  .card.c3 .logo{background:linear-gradient(135deg,#34d399,#059669)}
+  .card.c4 .logo{background:linear-gradient(135deg,#f472b6,#db2777)}
+  .card.c5 .logo{background:linear-gradient(135deg,#f59e0b,#d97706)}
+  .card.c6 .logo{background:linear-gradient(135deg,#60a5fa,#2563eb)}
+  .card h3{min-height:30px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:clamp(20px,2.4vw,25px);font-weight:600;letter-spacing:-.02em;margin:0 0 10px;transform:translateZ(30px)}
+  .card p.desc{color:var(--muted2);font-size:14px;line-height:1.55;text-wrap:pretty;margin:0;transform:translateZ(30px)}
+  .card .stack{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px;transform:translateZ(30px)}
+  .card .stack span{font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 9px;border:1px solid var(--line);border-radius:6px;color:var(--muted);background:rgba(255,255,255,.02)}
+  .card .arrow{position:absolute;top:26px;right:26px;z-index:2;width:40px;height:40px;border-radius:50%;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;transition:.3s}
+  .card:hover .arrow{background:var(--accent);border-color:var(--accent);transform:rotate(-45deg)}
+  .card .arrow svg{width:15px;height:15px;stroke:#fff}
+  .card:hover .arrow svg{stroke:#06060c}
+  .est{display:inline-block;margin-left:8px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:2px 6px;vertical-align:middle}
+  .live-chip{display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1;padding:5px 8px;border:1px solid rgba(52,211,153,.42);border-radius:999px;color:#bbf7d0;background:rgba(52,211,153,.1);text-transform:uppercase;letter-spacing:.04em}
+  .live-chip::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+  .work-more{display:flex;justify-content:center;margin-top:44px}
+
+  /* contact */
+  .contact{text-align:center}
+  .contact h2{font-size:clamp(38px,8vw,104px);font-weight:700;letter-spacing:-.04em;line-height:.96}
+  .contact h2 a{color:var(--ink);text-decoration:none;background:linear-gradient(var(--accent),var(--accent)) no-repeat left bottom/0% 2px;transition:background-size .4s}
+  .contact h2 a:hover{background-size:100% 2px;color:var(--accent)}
+  .contact .lead{margin:26px auto 0;max-width:46ch;color:var(--muted2);font-size:clamp(15px,2vw,18px);line-height:1.6}
+  .contact .links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:42px}
+  .contact .links a{display:inline-flex;align-items:center;gap:9px;color:var(--muted2);text-decoration:none;font-size:14px;padding:12px 20px;border:1px solid var(--line);border-radius:100px;transition:border-color .2s,color .2s,transform .2s;background:var(--bg2)}
+  .contact .links a:hover{color:var(--ink);border-color:var(--accent);transform:translateY(-3px)}
+  .contact .links a svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
+  footer{padding:40px clamp(20px,5vw,64px);border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:13px;color:var(--muted);flex-wrap:wrap;gap:12px;font-family:'JetBrains Mono',monospace;max-width:1320px;margin:0 auto}
+
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal[data-d="1"]{transition-delay:.08s}.reveal[data-d="2"]{transition-delay:.16s}.reveal[data-d="3"]{transition-delay:.24s}
+  .reveal-l,.reveal-r,.reveal-scale{opacity:0;transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+  .reveal-l{transform:translateX(-50px)} .reveal-r{transform:translateX(50px)} .reveal-scale{transform:scale(.92) translateY(26px)}
+  .reveal-l.in,.reveal-r.in,.reveal-scale.in{opacity:1;transform:none}
+  [data-d="1"]{transition-delay:.08s}[data-d="2"]{transition-delay:.16s}[data-d="3"]{transition-delay:.24s}[data-d="4"]{transition-delay:.32s}[data-d="5"]{transition-delay:.4s}
+  .skill-card.reveal{transform:scale(.94) translateY(28px)}
+  .skill-card.reveal.in{transform:none}
+  .progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:200;background:linear-gradient(90deg,var(--violet),var(--cyan));box-shadow:0 0 12px rgba(34,211,238,.8);transition:width .1s linear}
+  .hero{z-index:1}
+  section.block{z-index:1}
+  footer{position:relative;z-index:1}
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    h1 .line span,.eyebrow,.sub,.cta-row,.scroll-hint,.reveal,.reveal-l,.reveal-r,.reveal-scale{opacity:1;transform:none}
+  }
+</style>
 </head>
 <body>
-
-<!-- 3D background -->
-<canvas id="scene" aria-hidden="true"></canvas>
-<div class="noise" aria-hidden="true"></div>
-
-<!-- ================= NAV ================= -->
+<template id="__bundler_thumbnail" data-bg-color="#07070c">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#07070c"/>
+    <text x="600" y="430" font-family="monospace" font-size="280" font-weight="700" text-anchor="middle" fill="#22d3ee" opacity="0.9">&lt;/&gt;</text>
+    <text x="600" y="560" font-family="monospace" font-size="60" font-weight="600" text-anchor="middle" fill="#a78bfa">almubarak.dev</text>
+  </svg>
+</template>
+<div class="progress" id="progress"></div>
+<div class="site-bg">
+  <canvas id="net"></canvas>
+  <div class="bg-grid"></div>
+  <div class="orb v"></div>
+  <div class="orb c"></div>
+  <div class="orb g"></div>
+  <div class="tokens" id="tokens">
+    <span class="tok" style="top:12%;left:5%;animation-delay:0s"><span class="p">$</span> ssh ali@almubarak.dev</span>
+    <span class="tok" style="top:22%;left:74%;animation-delay:-2.5s"><span class="p">$</span> nmap -sV 10.0.0.1</span>
+    <span class="tok" style="top:40%;left:6%;animation-delay:-5s">SELECT * FROM users;</span>
+    <span class="tok" style="top:30%;left:88%;animation-delay:-7s"><span class="p">$</span> git push origin main</span>
+    <span class="tok" style="top:62%;left:80%;animation-delay:-3.5s"><span class="p">&gt;</span> 200 OK</span>
+    <span class="tok" style="top:70%;left:5%;animation-delay:-9s">const secure = true;</span>
+    <span class="tok" style="top:84%;left:30%;animation-delay:-1.5s">&lt;/&gt;</span>
+    <span class="tok" style="top:88%;left:70%;animation-delay:-6s"><span class="p">$</span> sudo ufw enable</span>
+    <span class="tok" style="top:54%;left:90%;animation-delay:-11s">await fetch(api)</span>
+    <span class="tok" style="top:9%;left:40%;animation-delay:-4s"><span class="p">$</span> docker compose up</span>
+    <span class="tok" style="top:78%;left:48%;animation-delay:-8s">splunk&gt; index=main</span>
+  </div>
+</div>
 <nav id="nav">
-  <a class="logo mono" href="#top">ali@almubarak<span class="accent">:~$</span><span class="caret">▊</span></a>
+  <a href="#top" class="logo">almubarak.dev</a>
   <div class="links">
-    <a href="#about">about</a>
-    <a href="#skills">skills</a>
-    <a href="#experience">experience</a>
-    <a href="#work">work</a>
-    <a class="cta mono" href="#contact">./contact --now</a>
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#experience">Experience</a>
+    <a href="#work">Work</a>
+    <a href="#contact" class="cta">Contact</a>
   </div>
 </nav>
 
-<!-- ================= HERO ================= -->
 <header class="hero" id="top">
-  <div class="hero-inner">
-    <div class="terminal mono reveal">
-      <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title">ali@almubarak: ~</span></div>
-      <div class="term-body">
-        <div class="term-line"><span class="prompt">$</span> <span id="typed"></span><span class="caret">▊</span></div>
-        <div class="term-out" id="typed-out"></div>
+  <div class="grid-floor"></div>
+  <div class="motifs">
+    <div class="motif m-term" data-depth="0.06">
+      <div class="floaty">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <pre><span class="d">$</span> <span class="g">whoami</span>
+ali_almubarak
+<span class="d">$</span> <span class="g">cat</span> stack.txt
+<span class="c">mern</span> · <span class="v">go</span> · <span class="v">.net</span>
+<span class="d">$</span> <span class="g">nmap</span> -sV target ▍</pre>
       </div>
     </div>
-    <h1 class="hero-name reveal" data-text="Ali Almubarak">Ali Almubarak</h1>
-    <p class="hero-tag mono reveal"><span class="accent">&gt;</span> builds<span class="cy">.deploy()</span> <span class="dim">&amp;&amp;</span> secures<span class="cy">.harden()</span></p>
-    <p class="hero-sub reveal">IT graduate from the University of Bahrain. I ship production MERN-stack
-      applications, design solid data layers, and break-then-fix things — security,
-      AI and data analytics, self-hosted end to end on my own infrastructure.</p>
-    <div class="hero-cta reveal">
-      <a href="#work" class="btn primary mono">view_work<span class="dim">()</span></a>
-      <a href="#contact" class="btn ghost mono">get_in_touch<span class="dim">()</span></a>
-    </div>
-    <div class="hero-badges mono reveal">
-      <span class="badge"><i class="pulse"></i>open to work</span>
-      <span class="badge">MERN</span><span class="badge">Go</span><span class="badge">.NET</span><span class="badge">security+</span>
+    <div class="motif m-glyph" data-depth="0.1">&lt;/&gt;</div>
+    <div class="motif m-lock" data-depth="0.045"><svg viewBox="0 0 24 24"><rect x="4" y="10.5" width="16" height="10.5" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/><circle cx="12" cy="15" r="1.4"/><path d="M12 16.4v1.8"/></svg></div>
+  </div>
+
+  <div class="hero-content">
+    <h1>
+      <span class="line"><span>Ali Almubarak</span></span>
+      <span class="line"><span class="grad">builds & secures.</span></span>
+    </h1>
+    <p class="sub">Fresh IT graduate from the University of Bahrain. I build production MERN-stack applications, design solid relational &amp; non-relational data layers, and dig into security, AI and data analytics.</p>
+    <div class="cta-row">
+      <a href="#work" class="btn primary">View work <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#06060c" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a href="#contact" class="btn ghost">Get in touch</a>
     </div>
   </div>
-  <a class="scroll-hint mono" href="#about" aria-label="scroll down">scroll ↓</a>
 </header>
 
-<!-- ================= TICKER ================= -->
-<div class="ticker mono" aria-hidden="true">
-  <div class="ticker-track">
-    <span>$ nmap -sV 10.0.0.1</span><span>200 OK</span><span>$ git push origin main</span><span>const secure = true;</span><span>$ sudo ufw enable</span><span>splunk&gt; index=main | stats count by src_ip</span><span>$ docker compose up -d</span><span>SELECT * FROM users WHERE id = $1;</span><span>$ ssh ali@almubarak.dev</span><span>await fetch(api)</span><span>burp&gt; intercept on</span><span>$ curl -I https://almubarak.dev</span>
-    <span>$ nmap -sV 10.0.0.1</span><span>200 OK</span><span>$ git push origin main</span><span>const secure = true;</span><span>$ sudo ufw enable</span><span>splunk&gt; index=main | stats count by src_ip</span><span>$ docker compose up -d</span><span>SELECT * FROM users WHERE id = $1;</span><span>$ ssh ali@almubarak.dev</span><span>await fetch(api)</span><span>burp&gt; intercept on</span><span>$ curl -I https://almubarak.dev</span>
-  </div>
-</div>
-
-<main>
-<!-- ================= ABOUT ================= -->
-<section id="about" class="section">
-  <div class="sec-head reveal"><span class="sec-num mono">01</span><h2 class="scramble" data-text="About">About</h2></div>
+<!-- ABOUT -->
+<section class="block" id="about">
+  <div class="sec-head reveal"><span class="sec-num">01</span><span class="sec-title">About</span></div>
   <div class="about-grid">
-    <div class="about-text reveal">
-      <p>I'm Ali — a full-stack developer and IT graduate from the
-        <strong>University of Bahrain</strong>. I've shipped 3+ production projects,
-        self-hosted on my own VPS and served through Cloudflare, end to end.</p>
-      <p>I work comfortably across the MERN stack and have a strong grasp of databases —
-        both relational and non-relational. Beyond building, I'm drawn to how systems hold
-        up under pressure: <strong>security, automation</strong>, and turning raw data into decisions.</p>
+    <div class="reveal">
+      <p><span class="hl">I'm Ali — a full-stack developer and fresh IT graduate</span> from the University of Bahrain. I've shipped 3+ production projects, self-hosted on my own VPS and served through Cloudflare, end to end.</p>
+      <p>I work comfortably across the MERN stack and have a strong grasp of databases — both relational and non-relational. Beyond building, I'm drawn to how systems hold up under pressure: security, automation, and turning raw data into decisions.</p>
       <div class="stats">
-        <div class="stat"><span class="stat-n mono" data-count="3">0</span><span class="stat-plus mono">+</span><span class="stat-l">production apps</span></div>
-        <div class="stat"><span class="stat-n mono" data-count="20">0</span><span class="stat-plus mono">+</span><span class="stat-l">practical projects</span></div>
-        <div class="stat"><span class="stat-n mono" data-count="48">0</span><span class="stat-plus mono">+</span><span class="stat-l">hands-on builds @ Reboot01</span></div>
+        <div class="stat"><div class="n">+3</div><div class="l">Production apps </div></div>
+        <div class="stat"><div class="n">+20</div><div class="l">Practical projects built</div></div>
       </div>
     </div>
-    <div class="about-cards">
-      <div class="focus-card tilt reveal">
-        <div class="focus-icon mono">[~]#</div>
-        <h3>Security</h3>
-        <p>Log analysis with Splunk, vulnerability scanning with Nessus, traffic interception
-          with Burp Suite — and a defensive mindset baked into how I build.</p>
+    <div class="focus reveal-r" data-d="1">
+      <div class="focus-card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.5 7.5 8 10 4.5-2.5 8-5 8-10V6l-8-4Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <div><h4>Security</h4><p>Log analysis with Splunk, vulnerability scanning with Nessus, and a defensive mindset baked into how I build.</p></div>
       </div>
-      <div class="focus-card tilt reveal">
-        <div class="focus-icon mono">λ()</div>
-        <h3>Artificial Intelligence</h3>
-        <p>Applying AI/ML models to real products — schedule planning in UniPlanner,
-          real-time sign recognition in eSharah — from coursework into shipped features.</p>
+      <div class="focus-card">
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></div>
+        <div><h4>Artificial Intelligence</h4><p>Applying AI/ML models to real products — like schedule planning in UniPlanner — from coursework into shipped features.</p></div>
       </div>
-      <div class="focus-card tilt reveal">
-        <div class="focus-icon mono">Σ&gt;</div>
-        <h3>Data Analytics</h3>
-        <p>Data mining and analysis — designing the schemas and pipelines that turn
-          messy data into something useful.</p>
+      <div class="focus-card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 14 3-4 3 3 4-6"/></svg></div>
+        <div><h4>Data Analytics</h4><p>Data mining and analysis — designing the schemas and pipelines that turn messy data into something useful.</p></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================= SKILLS ================= -->
-<section id="skills" class="section">
-  <div class="sec-head reveal"><span class="sec-num mono">02</span><h2 class="scramble" data-text="Arsenal">Arsenal</h2></div>
-  <div class="skills-grid">
-    <div class="skill-card tilt reveal"><h4 class="mono">&lt;backend/&gt;</h4><div class="tags">
-      <span><img class="ti lt" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" alt="">Express</span>
-      <span><img class="ti" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" alt="">Golang</span>
-      <span><img class="ti" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" alt="">PHP</span>
-      <span><img class="ti" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dot-net/dot-net-original.svg" alt="">C# .NET</span>
-    </div></div>
-    <div class="skill-card tilt reveal"><h4 class="mono">&lt;frontend/&gt;</h4><div class="tags">
-      <span><img class="ti" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="">React</span>
-      <span><img class="ti" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" alt="">Tailwind</span>
-      <span><img class="ti" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" alt="">Bootstrap</span>
-      <span><img class="ti" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg" alt="">Flutter</span>
-    </div></div>
-    <div class="skill-card tilt reveal"><h4 class="mono">&lt;frameworks/&gt;</h4><div class="tags">
-      <span><img class="ti lt" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" alt="">Next.js</span>
-      <span><img class="ti" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg" alt="">Laravel</span>
-    </div></div>
-    <div class="skill-card tilt reveal"><h4 class="mono">&lt;databases/&gt;</h4><div class="tags">
-      <span><img class="ti" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="">MySQL</span>
-      <span><img class="ti" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="">PostgreSQL</span>
-      <span><img class="ti" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="">MongoDB</span>
-      <span><img class="ti" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" alt="">SQLite</span>
-      <span><img class="ti" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg" alt="">Supabase</span>
-    </div></div>
-    <div class="skill-card tilt reveal hot"><h4 class="mono">&lt;security/&gt;</h4><div class="tags">
-      <span><img class="ti lt" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/splunk/splunk-original-wordmark.svg" alt="">Splunk</span>
-      <span><img class="ti lt" src="https://www.tenable.com/sites/drupal.dmz.tenablesecurity.com/files/images/blog/nessus15thlogo.png" alt="">Nessus</span>
-      <span><img class="ti lt" src="https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/logos/burpsuite-w3f4g0vh9opupo2g5ek92.png/burpsuite-xw0lw7maj1h72v6kbk0104.png?_a=DATAiZAAZAA0" alt="">Burp Suite</span>
-      <span><img class="ti" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cloudflare/cloudflare-original.svg" alt="">Cloudflare</span>
-      <span><img class="ti lt" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kalilinux/kalilinux-original.svg" alt="">Kali Linux</span>
-    </div></div>
-    <div class="skill-card tilt reveal"><h4 class="mono">&lt;ci-cd/&gt;</h4><div class="tags">
-      <span><img class="ti lt" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg" alt="">Jenkins</span>
-      <span><img class="ti lt" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/githubactions/githubactions-original.svg" alt="">GitHub Actions</span>
-      <span><img class="ti" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="">Docker</span>
-    </div></div>
-  </div>
-</section>
-
-<!-- ================= EXPERIENCE ================= -->
-<section id="experience" class="section">
-  <div class="sec-head reveal"><span class="sec-num mono">03</span><h2 class="scramble" data-text="Experience & Education">Experience &amp; Education</h2></div>
-  <div class="timeline">
-    <div class="tl-item reveal">
-      <div class="tl-marker"></div>
-      <div class="tl-card tilt">
-        <div class="tl-top"><img src="images/logos/agu.png" alt="AGU" class="tl-logo"><div><span class="tl-kicker mono">experience</span><h3>Web Developer — Arabian Gulf University</h3><span class="tl-meta mono">2 months · Manama, Bahrain</span></div></div>
-        <p>Delivered 2 production projects — <strong>MBA</strong> and <strong>Almajles</strong> — on Drupal CMS.
-          Built a fully structured front-end framework with Twig templating, Bootstrap and jQuery
-          for consistent, maintainable interfaces.</p>
-        <div class="tags"><span>Drupal</span><span>Twig</span><span>Bootstrap</span><span>jQuery</span></div>
+<!-- SKILLS -->
+<section class="block" id="skills">
+  <div class="skill-groups">
+    <div class="skill-card reveal">
+      <div class="kh"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M7 7h.01M7 17h.01"/></svg></span><h4>Backend</h4></div>
+      <div class="chips">
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" alt="" style="background:#fff;border-radius:4px;padding:1px">Express</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" alt="">Golang</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" alt="">PHP</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dot-net/dot-net-original.svg" alt="">C# .NET</span>
       </div>
     </div>
-    <div class="tl-item reveal">
-      <div class="tl-marker"></div>
-      <div class="tl-card tilt">
-        <div class="tl-top"><img src="images/logos/uob.png" alt="University of Bahrain" class="tl-logo"><div><span class="tl-kicker mono">education</span><h3>BSc in Information Systems — University of Bahrain</h3><span class="tl-meta mono">IT College</span></div></div>
-        <p>Theoretical and practical foundations across data mining, AI, security and web development.</p>
-        <div class="tags"><span>Data Mining</span><span>AI</span><span>Security</span><span>Web Dev</span></div>
+    <div class="skill-card reveal" data-d="1">
+      <div class="kh"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span><h4>Frontend</h4></div>
+      <div class="chips">
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="">React</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" alt="">Tailwind</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" alt="">Bootstrap</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg" alt="">Flutter</span>
       </div>
     </div>
-    <div class="tl-item reveal">
-      <div class="tl-marker"></div>
-      <div class="tl-card tilt">
-        <div class="tl-top"><img src="images/logos/reboot.png" alt="Reboot01" class="tl-logo"><div><span class="tl-kicker mono">education</span><h3>Diploma in Full-Stack Development — Reboot01</h3><span class="tl-meta mono">accredited by AUBH</span></div></div>
-        <p>48+ hands-on projects covering advanced concepts: WebSockets, database migrations,
-          and modern frameworks like Next.js.</p>
-        <div class="tags"><span>WebSockets</span><span>Migrations</span><span>Next.js</span></div>
+    <div class="skill-card reveal" data-d="2">
+      <div class="kh"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></svg></span><h4>Frameworks</h4></div>
+      <div class="chips">
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" alt="" style="background:#fff;border-radius:4px;padding:1px">Next.js</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg" alt="">Laravel</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="kh"><span class="ic"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg></span><h4>Databases</h4></div>
+      <div class="chips">
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="">MySQL</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="">PostgreSQL</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="">MongoDB</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" alt="">SQLite</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg" alt="">Supabase</span>
+      </div>
+    </div>
+    <div class="skill-card reveal" data-d="1">
+      <div class="kh"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.5 7.5 8 10 4.5-2.5 8-5 8-10V6l-8-4Z"/></svg></span><h4>Security</h4></div>
+      <div class="chips">
+        <span class="chip"><span class="badge"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/splunk/splunk-original-wordmark.svg" alt="" style="background:#fff;border-radius:4px;padding:1px"></span>Splunk</span>
+        <span class="chip"><span class="badge"><img src="https://www.tenable.com/sites/drupal.dmz.tenablesecurity.com/files/images/blog/nessus15thlogo.png" alt="" srcset=""></span>Nessus</span>
+        <span class="chip"><span class="badge"><img src="https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/logos/burpsuite-w3f4g0vh9opupo2g5ek92.png/burpsuite-xw0lw7maj1h72v6kbk0104.png?_a=DATAiZAAZAA0" alt="" style="background:#fff;border-radius:4px;padding:1px"></span>Burp suite</span>
+        <span class="chip"><span class="badge"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cloudflare/cloudflare-original.svg" alt="" style="background:#fff;border-radius:4px;padding:1px"></span>Cloudflare</span>
+        <span class="chip"><span class="badge"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kalilinux/kalilinux-original.svg" alt="" style="border-radius:4px;padding:1px"></span>Kali linux</span>
+        <span></span>
+      </div>
+    </div>
+    <div class="skill-card reveal" data-d="2">
+      <div class="kh"><span class="ic"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v4h-4"/></svg></span><h4>CI / CD</h4></div>
+      <div class="chips">
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg" alt="" style="background:#fff;border-radius:4px;padding:1px">Jenkins</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/githubactions/githubactions-original.svg" alt="" style="background:#fff;border-radius:4px;padding:1px">GitHub Actions</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================= WORK ================= -->
-<section id="work" class="section">
-  <div class="sec-head reveal"><span class="sec-num mono">04</span><h2 class="scramble" data-text="Selected Work">Selected Work</h2></div>
-  <p class="sec-sub reveal mono">// production apps &amp; projects — self-hosted on my VPS</p>
+<!-- EXPERIENCE & EDUCATION -->
+<section class="block" id="experience">
+  <div class="sec-head reveal"><span class="sec-num">03</span><span class="sec-title">Experience &amp; education</span></div>
+  <div class="tl">
+    <div class="tl-col reveal-l">
+      <h3><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>Experience</h3>
+      <div class="tl-item">
+        <div class="tl-card">
+          <div class="top">
+            <div class="logo img-logo"><img src="images/logos/agu.png" alt="Arabian Gulf University logo"></div>
+            <div>
+              <div class="role">Web Developer</div>
+              <div class="org">Arabian Gulf University (AGU)</div>
+              <div class="when">2 months · Manama, Bahrain</div>
+            </div>
+          </div>
+          <p>Delivered 2 production projects — <strong>MBA</strong> and <strong>Almajles</strong> — on Drupal CMS. Built a fully structured front-end framework with Twig templating, Bootstrap and jQuery for consistent, maintainable interfaces.</p>
+          <div class="tags"><span>Drupal</span><span>Twig</span><span>Bootstrap</span><span>jQuery</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tl-col reveal-r" data-d="1">
+      <h3><svg viewBox="0 0 24 24"><path d="m22 10-10-5L2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5"/></svg>Education</h3>
+      <div class="tl-item">
+        <div class="tl-card">
+          <div class="top">
+            <div class="logo img-logo"><img src="images/logos/uob.png" alt="University of Bahrain logo"></div>
+            <div>
+              <div class="role">BSc in Information Systems</div>
+              <div class="org">University of Bahrain — IT</div>
+            </div>
+          </div>
+          <p>Theoretical and practical foundations across data mining, AI, security and web development.</p>
+          <div class="tags"><span>Data Mining</span><span>AI</span><span>Security</span><span>Web Dev</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-card">
+          <div class="top">
+            <div class="logo img-logo"><img src="images/logos/reboot.png" alt="Reboot01 logo"></div>
+            <div>
+              <div class="role">Diploma in Full-Stack Development</div>
+              <div class="org">Reboot01 Coding Institute — accredited by AUBH</div>
+            </div>
+          </div>
+          <p>48+ hands-on projects covering advanced concepts: WebSockets, database migrations, and modern frameworks like Next.js.</p>
+          <div class="tags"><span>WebSockets</span><span>Migrations</span><span>Next.js</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="block" id="work">
+  <div class="sec-head reveal"><span class="sec-num">04</span><span class="sec-title">Selected work</span><span class="sec-sub">Production apps &amp; projects — self-hosted on my VPS.</span></div>
   <div class="work-grid">
-
-    <article class="proj tilt reveal featured">
-      <div class="proj-media grad-a"><span class="proj-glyph mono">UP</span></div>
-      <div class="proj-body">
-        <div class="proj-head"><h3>UniPlanner</h3><span class="live mono"><i class="pulse"></i>live</span></div>
-        <p>An upgraded UCS platform that helps University of Bahrain students plan schedules,
-          view course details and manage major plans — powered by an AI model.</p>
-        <div class="tags"><span>TypeScript</span><span>Next.js</span><span>Tailwind</span><span>Python</span><span>React</span></div>
-        <div class="proj-links mono"><a href="https://uni.almubarak.dev" target="_blank" rel="noopener">visit ↗</a></div>
+    <a class="card c1 reveal" href="https://uni.almubarak.dev" target="_blank" rel="noopener">
+      <div class="visual"></div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+      <div class="logo">UP</div>
+      <h3>UniPlanner <span class="live-chip">Live</span></h3>
+        <div class="stack">
+          <span class="chip"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" alt="TypeScript">TypeScript</span>
+          <span class="chip"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" alt="Next.js">Next.js</span>
+          <span class="chip"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" alt="Tailwind CSS">Tailwind </span>
+          <span class="chip"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">Python</span>
+          <span class="chip"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React">React</span>
       </div>
-    </article>
+      <p class="desc">An upgraded UCS platform that helps University of Bahrain students plan schedules, view course details and manage major plans — powered by an AI model.</p>
+    </a>
 
-    <article class="proj tilt reveal featured">
-      <div class="proj-media grad-b"><span class="proj-glyph mono">إش</span></div>
-      <div class="proj-body">
-        <div class="proj-head"><h3>eSharah</h3><span class="live mono"><i class="pulse"></i>live</span></div>
-        <p>An interactive platform for learning and translating Arabic Sign Language — structured
-          lessons, an AI camera translator built on TensorFlow Lite + MediaPipe, a vocabulary game
-          and a competitive leaderboard.</p>
-        <div class="tags"><span>Flutter</span><span>Supabase</span><span>TensorFlow</span><span>MediaPipe</span></div>
-        <div class="proj-links mono"><a href="https://esharah.almubarak.dev" target="_blank" rel="noopener">visit ↗</a></div>
+    <a class="card c2 reveal" data-d="1" href="https://github.com/oosQ/Bluedit" target="_blank" rel="noopener">
+      <div class="visual"></div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+      <div class="logo img-cover"><img src="images/projects/bluedit.png" alt="Bluedit logo"></div>
+      <h3>Bluedit</h3>
+            <div class="stack">
+        <span class="chip"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" alt="Go">Go</span>
+        <span class="chip"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" alt="Sqlite">Sqlite</span>
+        <span class="chip"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="Vanilla JS">Vanilla JS</span>
       </div>
-    </article>
+      <p class="desc">A real-time single-page forum with posts, comments, live private chat and online presence — built on a Go backend with WebSockets and vanilla JS.</p>
+    </a>
 
-    <article class="proj tilt reveal">
-      <div class="proj-media"><img src="images/projects/bluedit.png" alt="Bluedit screenshot"></div>
-      <div class="proj-body">
-        <div class="proj-head"><h3>Bluedit</h3></div>
-        <p>A real-time single-page forum with posts, comments, live private chat and online
-          presence — Go backend with WebSockets, vanilla JS front-end.</p>
-        <div class="tags"><span>Go</span><span>SQLite</span><span>Vanilla JS</span><span>WebSockets</span></div>
-        <div class="proj-links mono"><a href="https://github.com/oosQ/Bluedit" target="_blank" rel="noopener">source ↗</a></div>
+    <a class="card c3 reveal" data-d="2" href="https://github.com/oosQ/Rebooter-invaders" target="_blank" rel="noopener">
+      <div class="visual"></div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+      <div class="logo img-cover"><img src="images/projects/rebooter-invaders.png" alt="Rebooter Invaders logo"></div>
+      <h3>Rebooter Invaders</h3>
+            <div class="stack">
+        <span class="chip"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="Vanilla JS">Vanilla JS</span>
+        <span class="chip"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" alt="Go">Go</span>
       </div>
-    </article>
+      <p class="desc">A browser-based Space Invaders game with 5 levels, story mode, a final boss and a live leaderboard — vanilla JS front-end on a Go backend.</p>
+    </a>
 
-    <article class="proj tilt reveal">
-      <div class="proj-media"><img src="images/projects/rebooter-invaders.png" alt="Rebooter Invaders screenshot"></div>
-      <div class="proj-body">
-        <div class="proj-head"><h3>Rebooter Invaders</h3></div>
-        <p>A browser-based Space Invaders game with 5 levels, story mode, a final boss and a
-          live leaderboard — vanilla JS front-end on a Go backend.</p>
-        <div class="tags"><span>Vanilla JS</span><span>Go</span></div>
-        <div class="proj-links mono"><a href="https://github.com/oosQ/Rebooter-invaders" target="_blank" rel="noopener">source ↗</a></div>
+    <a class="card c4 reveal" href="https://esharah.almubarak.dev" target="_blank" rel="noopener">
+      <div class="visual"></div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+      <div class="logo">eS</div>
+      <h3>eSharah <span class="live-chip">Live</span></h3>
+            <div class="stack">
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg" alt="Flutter">Flutter</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg" alt="Supabase">Supabase</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow">TensorFlow</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">Python</span>
       </div>
-    </article>
+      <p class="desc">A web platform project from my repository. Send me a one-line overview and stack and I'll drop the accurate copy in here.</p>
+    </a>
 
-    <article class="proj tilt reveal">
-      <div class="proj-media grad-c"><span class="proj-glyph mono">Ro</span></div>
-      <div class="proj-body">
-        <div class="proj-head"><h3>Royalz</h3></div>
-        <p>Hotel booking web app — room browsing, availability checking, registration/login,
-          booking &amp; payment flow, and an admin dashboard.</p>
-        <div class="tags"><span>PHP</span><span>MySQL</span><span>Bootstrap</span></div>
-        <div class="proj-links mono"><a href="https://github.com/oosQ/Royalz" target="_blank" rel="noopener">source ↗</a></div>
+    <a class="card c5 reveal" data-d="1" href="https://github.com/oosQ/Royalz" target="_blank" rel="noopener">
+      <div class="visual"></div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+      <div class="logo">Ro</div>
+      <h3>Royalz</h3>
+        <div class="stack">
+          <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" alt="PHP">PHP</span>
+          <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="MySQL">MySQL</span>
+          <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" alt="Bootstrap">Bootstrap</span>
       </div>
-    </article>
+      <p class="desc">Hotel booking web app built with PHP and MySQL. Features include room browsing, availability checking, user registration/login , booking & payment flow, and an admin dashboard. </p>
+    </a>
 
-    <article class="proj tilt reveal">
-      <div class="proj-media grad-d"><span class="proj-glyph mono">3U</span></div>
-      <div class="proj-body">
-        <div class="proj-head"><h3>ThreeUnique</h3></div>
-        <p>HR Management System for recruitment, promotions and records management —
-          C# Windows Forms on .NET Framework 4.8.</p>
-        <div class="tags"><span>C#</span><span>.NET</span><span>SQL Server</span></div>
-        <div class="proj-links mono"><a href="https://github.com/oosQ/ThreeUnique" target="_blank" rel="noopener">source ↗</a></div>
+    <a class="card c6 reveal" data-d="2" href="https://github.com/oosQ/ThreeUnique" target="_blank" rel="noopener">
+      <div class="visual"></div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+      <div class="logo">3U</div>
+      <h3>ThreeUnique</h3>
+      <div class="stack">
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" alt="C#">C#</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dot-net/dot-net-original.svg" alt=".NET">.NET</span>
+        <span class="chip"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-original.svg" alt="SQL Server">SQL Server</span>
       </div>
-    </article>
+
+      <p class="desc">HR Management System for employee recruitment, promotions, and records management. Built with C# Windows Forms and .NET Framework 4.8. </p>
+
+    </a>
   </div>
-  <div class="more reveal"><a class="btn ghost mono" href="https://github.com/oosQ" target="_blank" rel="noopener">git clone github.com/oosQ ↗</a></div>
-</section>
-
-<!-- ================= CONTACT ================= -->
-<section id="contact" class="section contact">
-  <div class="sec-head reveal"><span class="sec-num mono">05</span><h2 class="scramble" data-text="Contact">Contact</h2></div>
-  <h3 class="contact-big reveal">Let's build something <span class="accent glitch" data-text="solid">solid</span><span class="cy">.</span></h3>
-  <p class="contact-sub reveal">Open to full-stack, web development and security roles.
-    Have a project, a question, or an opportunity? My inbox is open.</p>
-  <div class="contact-row reveal">
-    <a class="btn primary mono" href="mailto:3lialmubarak@gmail.com">3lialmubarak@gmail.com</a>
-  </div>
-  <div class="socials mono reveal">
-    <a href="https://github.com/oosQ" target="_blank" rel="noopener">github/oosQ</a>
-    <span class="dim">·</span>
-    <a href="https://www.instagram.com/0oh3/" target="_blank" rel="noopener">ig/@0oh3</a>
-    <span class="dim">·</span>
-    <a href="mailto:hello@almubarak.dev">hello@almubarak.dev</a>
+  <div class="work-more">
+    <a href="https://github.com/oosQ" target="_blank" rel="noopener" class="btn ghost">See more on GitHub <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
   </div>
 </section>
-</main>
 
-<footer class="mono">
+<!-- CONTACT -->
+<section class="block contact" id="contact">
+  <div class="sec-head reveal" style="justify-content:center"><span class="sec-num">05</span><span class="sec-title">Contact</span></div>
+  <h2 class="reveal-scale">Let's build<br>something <a href="mailto:hello@almubarak.dev">solid</a>.</h2>
+  <p class="lead reveal" data-d="1">Open to full-stack, web development and security roles. Have a project, a question, or an opportunity? My inbox is open.</p>
+  <div class="links reveal" data-d="2">
+    <a href="mailto:3lialmubarak@gmail.com"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>3lialmubarak@gmail.com</a>
+    <a href="https://almubarak.dev" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="" style="height: 30px;width: 20px;">Ali almubarak</a>
+    <a href="https://github.com/oosQ" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="" style="height: 30px;width: 20px;color: #fff;">github.com/oosQ</a>
+    <a href="https://www.instagram.com/0oh3/" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/instagram/instagram-original.svg" alt="" srcset="">@0oh3</a>
+  </div>
+</section>
+
+<footer>
   <span>© 2026 Ali Almubarak</span>
-  <span class="dim">// built &amp; deployed from my own pipeline — <a href="https://github.com/oosQ" target="_blank" rel="noopener">view source</a></span>
 </footer>
 
-<script type="module" src="js/main.js?v=dev"></script>
+<script>
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const nav=document.getElementById('nav');
+  const prog=document.getElementById('progress');
+  const tokens=document.getElementById('tokens');
+
+  addEventListener('scroll',()=>{
+    nav.classList.toggle('scrolled',scrollY>40);
+    const h=document.documentElement.scrollHeight-innerHeight;
+    prog.style.width=(h>0?(scrollY/h*100):0)+'%';
+    if(tokens&&!reduce)tokens.style.transform=`translateY(${-scrollY*0.06}px)`;
+  },{passive:true});
+
+  // mouse parallax on hero motifs
+  const hero=document.querySelector('.hero');
+  const depths=[...document.querySelectorAll('.motif[data-depth]')];
+  let tx=0,ty=0,cx=0,cy=0;
+  hero.addEventListener('mousemove',e=>{
+    const r=hero.getBoundingClientRect();
+    tx=(e.clientX-r.width/2)/r.width;
+    ty=(e.clientY-r.height/2)/r.height;
+  });
+  hero.addEventListener('mouseleave',()=>{tx=0;ty=0;});
+  if(!reduce){(function loop(){
+    cx+=(tx-cx)*.06;cy+=(ty-cy)*.06;
+    depths.forEach(el=>{const d=parseFloat(el.dataset.depth)*120;el.style.transform=`translate3d(${-cx*d}px,${-cy*d}px,0)`;});
+    requestAnimationFrame(loop);
+  })();}
+
+  // network canvas (security / connectivity motif)
+  const cv=document.getElementById('net');
+  if(cv){
+    const ctx=cv.getContext('2d');
+    const DPR=Math.min(devicePixelRatio||1,2);
+    let W,H,nodes=[],mx=-1e9,my=-1e9;
+    function resize(){W=cv.width=innerWidth*DPR;H=cv.height=innerHeight*DPR;cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';}
+    function seed(){nodes=[];const N=Math.min(64,Math.floor(innerWidth/26));for(let i=0;i<N;i++)nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.16*DPR,vy:(Math.random()-.5)*.16*DPR});}
+    resize();seed();
+    addEventListener('resize',()=>{resize();seed();},{passive:true});
+    addEventListener('mousemove',e=>{mx=e.clientX*DPR;my=e.clientY*DPR;},{passive:true});
+    const LINK=128*DPR;
+    function dot(n){ctx.fillStyle='rgba(167,139,250,.5)';ctx.beginPath();ctx.arc(n.x,n.y,DPR*1.4,0,7);ctx.fill();}
+    function frame(){
+      ctx.clearRect(0,0,W,H);
+      for(const n of nodes){n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;}
+      for(let i=0;i<nodes.length;i++){const a=nodes[i];
+        for(let j=i+1;j<nodes.length;j++){const b=nodes[j];const dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
+          if(d<LINK){const o=(1-d/LINK)*.42;ctx.strokeStyle='rgba(124,92,246,'+o+')';ctx.lineWidth=DPR*.6;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}
+        const dmx=a.x-mx,dmy=a.y-my,dm=Math.hypot(dmx,dmy);
+        if(dm<LINK*1.7){const o=(1-dm/(LINK*1.7))*.5;ctx.strokeStyle='rgba(34,211,238,'+o+')';ctx.lineWidth=DPR*.7;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(mx,my);ctx.stroke();}
+        dot(a);}
+      requestAnimationFrame(frame);
+    }
+    if(reduce){ctx.clearRect(0,0,W,H);nodes.forEach(dot);}else frame();
+  }
+
+  // card 3d tilt
+  document.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width-.5;
+      const py=(e.clientY-r.top)/r.height-.5;
+      card.style.transform=`perspective(800px) rotateY(${px*7}deg) rotateX(${-py*7}deg) translateY(-6px)`;
+    });
+    card.addEventListener('mouseleave',()=>card.style.transform='');
+  });
+
+  // reveal on scroll (replays on re-enter so sections never feel static)
+  const io=new IntersectionObserver(es=>es.forEach(en=>en.target.classList.toggle('in',en.isIntersecting)),{threshold:.12});
+  document.querySelectorAll('.reveal,.reveal-l,.reveal-r,.reveal-scale').forEach(el=>io.observe(el));
+</script>
 </body>
 </html>

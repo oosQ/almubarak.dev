@@ -28,7 +28,7 @@ jobs:
         run: |
           SHORT_SHA="${GITHUB_SHA::7}"
           sed -i "s/?v=dev/?v=${SHORT_SHA}/g" index.html
-          grep -n "?v=${SHORT_SHA}" index.html
+          grep -n "?v=${SHORT_SHA}" index.html || echo "no versioned assets (inline CSS/JS)"
 
       - name: Deploy site
         run: |
