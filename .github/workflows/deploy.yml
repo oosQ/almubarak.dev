@@ -24,6 +24,12 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H 209.250.245.80 >> ~/.ssh/known_hosts
 
+      - name: Stamp asset version (cache busting)
+        run: |
+          SHORT_SHA="${GITHUB_SHA::7}"
+          sed -i "s/?v=dev/?v=${SHORT_SHA}/g" index.html
+          grep -n "?v=${SHORT_SHA}" index.html
+
       - name: Deploy site
         run: |
           rsync -avz --delete \
