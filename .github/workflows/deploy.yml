@@ -1,0 +1,40 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: rsync → almubarak.dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H 209.250.245.80 >> ~/.ssh/known_hosts
+
+      - name: Deploy site
+        run: |
+          rsync -avz --delete \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude 'README.md' \
+            --exclude '.gitignore' \
+            -e "ssh -i ~/.ssh/deploy_key" \
+            ./ linuxuser@209.250.245.80:/var/www/almubarak.dev/
+
+      - name: Verify
+        run: |
+          sleep 2
+          curl -fsSI https://almubarak.dev | head -1

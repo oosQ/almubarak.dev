@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ali Almubarak — Full-Stack Developer & Security</title>
+<meta name="description" content="Ali Almubarak — full-stack developer and security enthusiast from Bahrain. I build production web applications and secure them.">
+<meta property="og:title" content="Ali Almubarak — builds & secures">
+<meta property="og:description" content="Full-stack developer & security enthusiast. MERN, Go, .NET — self-hosted, end to end.">
+<meta property="og:url" content="https://almubarak.dev">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 3D background -->
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="noise" aria-hidden="true"></div>
+
+<!-- ================= NAV ================= -->
+<nav id="nav">
+  <a class="logo mono" href="#top">ali@almubarak<span class="accent">:~$</span><span class="caret">▊</span></a>
+  <div class="links">
+    <a href="#about">about</a>
+    <a href="#skills">skills</a>
+    <a href="#experience">experience</a>
+    <a href="#work">work</a>
+    <a class="cta mono" href="#contact">./contact --now</a>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div class="hero-inner">
+    <div class="terminal mono reveal">
+      <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title">ali@almubarak: ~</span></div>
+      <div class="term-body">
+        <div class="term-line"><span class="prompt">$</span> <span id="typed"></span><span class="caret">▊</span></div>
+        <div class="term-out" id="typed-out"></div>
+      </div>
+    </div>
+    <h1 class="hero-name reveal" data-text="Ali Almubarak">Ali Almubarak</h1>
+    <p class="hero-tag mono reveal"><span class="accent">&gt;</span> builds<span class="cy">.deploy()</span> <span class="dim">&amp;&amp;</span> secures<span class="cy">.harden()</span></p>
+    <p class="hero-sub reveal">IT graduate from the University of Bahrain. I ship production MERN-stack
+      applications, design solid data layers, and break-then-fix things — security,
+      AI and data analytics, self-hosted end to end on my own infrastructure.</p>
+    <div class="hero-cta reveal">
+      <a href="#work" class="btn primary mono">view_work<span class="dim">()</span></a>
+      <a href="#contact" class="btn ghost mono">get_in_touch<span class="dim">()</span></a>
+    </div>
+    <div class="hero-badges mono reveal">
+      <span class="badge"><i class="pulse"></i>open to work</span>
+      <span class="badge">MERN</span><span class="badge">Go</span><span class="badge">.NET</span><span class="badge">security+</span>
+    </div>
+  </div>
+  <a class="scroll-hint mono" href="#about" aria-label="scroll down">scroll ↓</a>
+</header>
+
+<!-- ================= TICKER ================= -->
+<div class="ticker mono" aria-hidden="true">
+  <div class="ticker-track">
+    <span>$ nmap -sV 10.0.0.1</span><span>200 OK</span><span>$ git push origin main</span><span>const secure = true;</span><span>$ sudo ufw enable</span><span>splunk&gt; index=main | stats count by src_ip</span><span>$ docker compose up -d</span><span>SELECT * FROM users WHERE id = $1;</span><span>$ ssh ali@almubarak.dev</span><span>await fetch(api)</span><span>burp&gt; intercept on</span><span>$ curl -I https://almubarak.dev</span>
+    <span>$ nmap -sV 10.0.0.1</span><span>200 OK</span><span>$ git push origin main</span><span>const secure = true;</span><span>$ sudo ufw enable</span><span>splunk&gt; index=main | stats count by src_ip</span><span>$ docker compose up -d</span><span>SELECT * FROM users WHERE id = $1;</span><span>$ ssh ali@almubarak.dev</span><span>await fetch(api)</span><span>burp&gt; intercept on</span><span>$ curl -I https://almubarak.dev</span>
+  </div>
+</div>
+
+<main>
+<!-- ================= ABOUT ================= -->
+<section id="about" class="section">
+  <div class="sec-head reveal"><span class="sec-num mono">01</span><h2 class="scramble" data-text="About">About</h2></div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>I'm Ali — a full-stack developer and IT graduate from the
+        <strong>University of Bahrain</strong>. I've shipped 3+ production projects,
+        self-hosted on my own VPS and served through Cloudflare, end to end.</p>
+      <p>I work comfortably across the MERN stack and have a strong grasp of databases —
+        both relational and non-relational. Beyond building, I'm drawn to how systems hold
+        up under pressure: <strong>security, automation</strong>, and turning raw data into decisions.</p>
+      <div class="stats">
+        <div class="stat"><span class="stat-n mono" data-count="3">0</span><span class="stat-plus mono">+</span><span class="stat-l">production apps</span></div>
+        <div class="stat"><span class="stat-n mono" data-count="20">0</span><span class="stat-plus mono">+</span><span class="stat-l">practical projects</span></div>
+        <div class="stat"><span class="stat-n mono" data-count="48">0</span><span class="stat-plus mono">+</span><span class="stat-l">hands-on builds @ Reboot01</span></div>
+      </div>
+    </div>
+    <div class="about-cards">
+      <div class="focus-card tilt reveal">
+        <div class="focus-icon mono">[~]#</div>
+        <h3>Security</h3>
+        <p>Log analysis with Splunk, vulnerability scanning with Nessus, traffic interception
+          with Burp Suite — and a defensive mindset baked into how I build.</p>
+      </div>
+      <div class="focus-card tilt reveal">
+        <div class="focus-icon mono">λ()</div>
+        <h3>Artificial Intelligence</h3>
+        <p>Applying AI/ML models to real products — schedule planning in UniPlanner,
+          real-time sign recognition in eSharah — from coursework into shipped features.</p>
+      </div>
+      <div class="focus-card tilt reveal">
+        <div class="focus-icon mono">Σ&gt;</div>
+        <h3>Data Analytics</h3>
+        <p>Data mining and analysis — designing the schemas and pipelines that turn
+          messy data into something useful.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SKILLS ================= -->
+<section id="skills" class="section">
+  <div class="sec-head reveal"><span class="sec-num mono">02</span><h2 class="scramble" data-text="Arsenal">Arsenal</h2></div>
+  <div class="skills-grid">
+    <div class="skill-card tilt reveal"><h4 class="mono">&lt;backend/&gt;</h4><div class="tags"><span>Express</span><span>Golang</span><span>PHP</span><span>C# .NET</span></div></div>
+    <div class="skill-card tilt reveal"><h4 class="mono">&lt;frontend/&gt;</h4><div class="tags"><span>React</span><span>Tailwind</span><span>Bootstrap</span><span>Flutter</span></div></div>
+    <div class="skill-card tilt reveal"><h4 class="mono">&lt;frameworks/&gt;</h4><div class="tags"><span>Next.js</span><span>Laravel</span></div></div>
+    <div class="skill-card tilt reveal"><h4 class="mono">&lt;databases/&gt;</h4><div class="tags"><span>MySQL</span><span>PostgreSQL</span><span>MongoDB</span><span>SQLite</span><span>Supabase</span></div></div>
+    <div class="skill-card tilt reveal hot"><h4 class="mono">&lt;security/&gt;</h4><div class="tags"><span>Splunk</span><span>Nessus</span><span>Burp Suite</span><span>Cloudflare</span><span>Kali Linux</span></div></div>
+    <div class="skill-card tilt reveal"><h4 class="mono">&lt;ci-cd/&gt;</h4><div class="tags"><span>Jenkins</span><span>GitHub Actions</span><span>Docker</span></div></div>
+  </div>
+</section>
+
+<!-- ================= EXPERIENCE ================= -->
+<section id="experience" class="section">
+  <div class="sec-head reveal"><span class="sec-num mono">03</span><h2 class="scramble" data-text="Experience & Education">Experience &amp; Education</h2></div>
+  <div class="timeline">
+    <div class="tl-item reveal">
+      <div class="tl-marker"></div>
+      <div class="tl-card tilt">
+        <div class="tl-top"><img src="images/logos/agu.png" alt="AGU" class="tl-logo"><div><span class="tl-kicker mono">experience</span><h3>Web Developer — Arabian Gulf University</h3><span class="tl-meta mono">2 months · Manama, Bahrain</span></div></div>
+        <p>Delivered 2 production projects — <strong>MBA</strong> and <strong>Almajles</strong> — on Drupal CMS.
+          Built a fully structured front-end framework with Twig templating, Bootstrap and jQuery
+          for consistent, maintainable interfaces.</p>
+        <div class="tags"><span>Drupal</span><span>Twig</span><span>Bootstrap</span><span>jQuery</span></div>
+      </div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-marker"></div>
+      <div class="tl-card tilt">
+        <div class="tl-top"><img src="images/logos/uob.png" alt="University of Bahrain" class="tl-logo"><div><span class="tl-kicker mono">education</span><h3>BSc in Information Systems — University of Bahrain</h3><span class="tl-meta mono">IT College</span></div></div>
+        <p>Theoretical and practical foundations across data mining, AI, security and web development.</p>
+        <div class="tags"><span>Data Mining</span><span>AI</span><span>Security</span><span>Web Dev</span></div>
+      </div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-marker"></div>
+      <div class="tl-card tilt">
+        <div class="tl-top"><img src="images/logos/reboot.png" alt="Reboot01" class="tl-logo"><div><span class="tl-kicker mono">education</span><h3>Diploma in Full-Stack Development — Reboot01</h3><span class="tl-meta mono">accredited by AUBH</span></div></div>
+        <p>48+ hands-on projects covering advanced concepts: WebSockets, database migrations,
+          and modern frameworks like Next.js.</p>
+        <div class="tags"><span>WebSockets</span><span>Migrations</span><span>Next.js</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WORK ================= -->
+<section id="work" class="section">
+  <div class="sec-head reveal"><span class="sec-num mono">04</span><h2 class="scramble" data-text="Selected Work">Selected Work</h2></div>
+  <p class="sec-sub reveal mono">// production apps &amp; projects — self-hosted on my VPS</p>
+  <div class="work-grid">
+
+    <article class="proj tilt reveal featured">
+      <div class="proj-media grad-a"><span class="proj-glyph mono">UP</span></div>
+      <div class="proj-body">
+        <div class="proj-head"><h3>UniPlanner</h3><span class="live mono"><i class="pulse"></i>live</span></div>
+        <p>An upgraded UCS platform that helps University of Bahrain students plan schedules,
+          view course details and manage major plans — powered by an AI model.</p>
+        <div class="tags"><span>TypeScript</span><span>Next.js</span><span>Tailwind</span><span>Python</span><span>React</span></div>
+        <div class="proj-links mono"><a href="https://uni.almubarak.dev" target="_blank" rel="noopener">visit ↗</a></div>
+      </div>
+    </article>
+
+    <article class="proj tilt reveal featured">
+      <div class="proj-media grad-b"><span class="proj-glyph mono">إش</span></div>
+      <div class="proj-body">
+        <div class="proj-head"><h3>eSharah</h3><span class="live mono"><i class="pulse"></i>live</span></div>
+        <p>An interactive platform for learning and translating Arabic Sign Language — structured
+          lessons, an AI camera translator built on TensorFlow Lite + MediaPipe, a vocabulary game
+          and a competitive leaderboard.</p>
+        <div class="tags"><span>Flutter</span><span>Supabase</span><span>TensorFlow</span><span>MediaPipe</span></div>
+        <div class="proj-links mono"><a href="https://esharah.almubarak.dev" target="_blank" rel="noopener">visit ↗</a></div>
+      </div>
+    </article>
+
+    <article class="proj tilt reveal">
+      <div class="proj-media"><img src="images/projects/bluedit.png" alt="Bluedit screenshot" loading="lazy"></div>
+      <div class="proj-body">
+        <div class="proj-head"><h3>Bluedit</h3></div>
+        <p>A real-time single-page forum with posts, comments, live private chat and online
+          presence — Go backend with WebSockets, vanilla JS front-end.</p>
+        <div class="tags"><span>Go</span><span>SQLite</span><span>Vanilla JS</span><span>WebSockets</span></div>
+        <div class="proj-links mono"><a href="https://github.com/oosQ/Bluedit" target="_blank" rel="noopener">source ↗</a></div>
+      </div>
+    </article>
+
+    <article class="proj tilt reveal">
+      <div class="proj-media"><img src="images/projects/rebooter-invaders.png" alt="Rebooter Invaders screenshot" loading="lazy"></div>
+      <div class="proj-body">
+        <div class="proj-head"><h3>Rebooter Invaders</h3></div>
+        <p>A browser-based Space Invaders game with 5 levels, story mode, a final boss and a
+          live leaderboard — vanilla JS front-end on a Go backend.</p>
+        <div class="tags"><span>Vanilla JS</span><span>Go</span></div>
+        <div class="proj-links mono"><a href="https://github.com/oosQ/Rebooter-invaders" target="_blank" rel="noopener">source ↗</a></div>
+      </div>
+    </article>
+
+    <article class="proj tilt reveal">
+      <div class="proj-media grad-c"><span class="proj-glyph mono">Ro</span></div>
+      <div class="proj-body">
+        <div class="proj-head"><h3>Royalz</h3></div>
+        <p>Hotel booking web app — room browsing, availability checking, registration/login,
+          booking &amp; payment flow, and an admin dashboard.</p>
+        <div class="tags"><span>PHP</span><span>MySQL</span><span>Bootstrap</span></div>
+        <div class="proj-links mono"><a href="https://github.com/oosQ/Royalz" target="_blank" rel="noopener">source ↗</a></div>
+      </div>
+    </article>
+
+    <article class="proj tilt reveal">
+      <div class="proj-media grad-d"><span class="proj-glyph mono">3U</span></div>
+      <div class="proj-body">
+        <div class="proj-head"><h3>ThreeUnique</h3></div>
+        <p>HR Management System for recruitment, promotions and records management —
+          C# Windows Forms on .NET Framework 4.8.</p>
+        <div class="tags"><span>C#</span><span>.NET</span><span>SQL Server</span></div>
+        <div class="proj-links mono"><a href="https://github.com/oosQ/ThreeUnique" target="_blank" rel="noopener">source ↗</a></div>
+      </div>
+    </article>
+  </div>
+  <div class="more reveal"><a class="btn ghost mono" href="https://github.com/oosQ" target="_blank" rel="noopener">git clone github.com/oosQ ↗</a></div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact" class="section contact">
+  <div class="sec-head reveal"><span class="sec-num mono">05</span><h2 class="scramble" data-text="Contact">Contact</h2></div>
+  <h3 class="contact-big reveal">Let's build something <span class="accent glitch" data-text="solid">solid</span><span class="cy">.</span></h3>
+  <p class="contact-sub reveal">Open to full-stack, web development and security roles.
+    Have a project, a question, or an opportunity? My inbox is open.</p>
+  <div class="contact-row reveal">
+    <a class="btn primary mono" href="mailto:3lialmubarak@gmail.com">3lialmubarak@gmail.com</a>
+  </div>
+  <div class="socials mono reveal">
+    <a href="https://github.com/oosQ" target="_blank" rel="noopener">github/oosQ</a>
+    <span class="dim">·</span>
+    <a href="https://www.instagram.com/0oh3/" target="_blank" rel="noopener">ig/@0oh3</a>
+    <span class="dim">·</span>
+    <a href="mailto:hello@almubarak.dev">hello@almubarak.dev</a>
+  </div>
+</section>
+</main>
+
+<footer class="mono">
+  <span>© 2026 Ali Almubarak</span>
+  <span class="dim">// built &amp; deployed from my own pipeline — <a href="https://github.com/oosQ" target="_blank" rel="noopener">view source</a></span>
+</footer>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
