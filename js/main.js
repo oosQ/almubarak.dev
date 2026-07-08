@@ -11,12 +11,14 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   const canvas = document.getElementById('scene');
   if (!canvas || !window.WebGLRenderingContext) return;
 
+  const isMobile = window.matchMedia('(max-width: 720px), (pointer: coarse)').matches;
+
   let renderer;
   try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'low-power' });
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile, alpha: true, powerPreference: 'low-power' });
   } catch (e) { canvas.remove(); return; }
 
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   const scene = new THREE.Scene();
@@ -49,7 +51,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   core.add(inner);
 
   // node points on a sphere shell + connecting lines
-  const NODE_COUNT = 110;
+  const NODE_COUNT = isMobile ? 64 : 110;
   const nodePos = new Float32Array(NODE_COUNT * 3);
   const nodeCol = new Float32Array(NODE_COUNT * 3);
   const pts = [];
@@ -89,7 +91,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   core.add(links);
 
   // starfield drift
-  const STARS = 500;
+  const STARS = isMobile ? 200 : 500;
   const starPos = new Float32Array(STARS * 3);
   for (let i = 0; i < STARS; i++) {
     starPos.set([(Math.random() - 0.5) * 46, (Math.random() - 0.5) * 30, (Math.random() - 0.5) * 30 - 4], i * 3);
@@ -110,10 +112,18 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   window.addEventListener('scroll', () => {
     scrollN = Math.min(window.scrollY / window.innerHeight, 3);
   }, { passive: true });
+  // mobile browsers fire resize on URL-bar collapse mid-scroll; rebuilding the
+  // framebuffer there causes a visible hitch, so skip small height-only changes
+  let lastW = window.innerWidth, lastH = window.innerHeight, resizeT;
   window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    if (isMobile && window.innerWidth === lastW && Math.abs(window.innerHeight - lastH) < 130) return;
+    clearTimeout(resizeT);
+    resizeT = setTimeout(() => {
+      lastW = window.innerWidth; lastH = window.innerHeight;
+      camera.aspect = lastW / lastH;
+      camera.updateProjectionMatrix();
+      renderer.setSize(lastW, lastH);
+    }, 150);
   });
 
   const clock = new THREE.Clock();
@@ -139,14 +149,19 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 
     const base = window.innerWidth < 720 ? 0.5 : 1;
     const fade = Math.max(0.25, base - scrollN * 0.28);
-    renderer.domElement.style.opacity = fade;
+    if (Math.abs(fade - lastFade) > 0.01) { renderer.domElement.style.opacity = fade; lastFade = fade; }
     renderer.render(scene, camera);
   }
+  let lastFade = -1;
 
-  function loop() {
+  const frameInterval = isMobile ? 1000 / 30 : 0;
+  let lastFrame = 0;
+  function loop(now = performance.now()) {
     if (!running || reduceMotion) return;
-    render();
     requestAnimationFrame(loop);
+    if (frameInterval && now - lastFrame < frameInterval) return;
+    lastFrame = now;
+    render();
   }
 
   if (reduceMotion) { render(); } else { loop(); }
